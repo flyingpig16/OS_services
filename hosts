@@ -1,0 +1,3 @@
+[clusters]
+server1.pig.com ansible_host=192.168.0.1
+server2.pig.com anisble_host=192.168.0.2
