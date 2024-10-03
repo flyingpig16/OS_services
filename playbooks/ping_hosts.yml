@@ -1,0 +1,6 @@
+---
+-  name: Ping all hosts using encrypted password
+   hosts: all
+   vars_files: ../secrets.yml
+   tasks:
+   - action: ping

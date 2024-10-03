@@ -1,0 +1,5 @@
+- name: Example Playbook
+  hosts: all
+  tasks:
+    - name: Test SSH connection
+      command: echo "SSH password is {{ ansible_ssh_pass }}"

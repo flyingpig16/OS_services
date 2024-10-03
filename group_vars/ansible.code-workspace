@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../../skyma/vscode/projects/ansible"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../playbooks"
+		}
+	],
+	"settings": {}
+}
