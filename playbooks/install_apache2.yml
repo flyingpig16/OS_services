@@ -1,0 +1,86 @@
+---
+- name: Install Apache and PHP, and modify httpd.conf
+  hosts: webservers
+  become: yes
+
+  vars_files:
+   - ../group_vars/all.yml
+   - ../group_vars/secrets.yml
+
+  tasks:
+  
+    - name: Install Apache (httpd) on RHEL-based systems
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Apache (apache2) on Debian-based systems
+      apt:
+        name: apache2  # Changed to apache2 from apache4
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install PHP on RHEL-based systems
+      yum:
+        name: php
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Install PHP on Debian-based systems
+      apt:
+        name: php
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure Apache is enabled and running on RHEL-based systems
+      systemd:
+        name: httpd
+        enabled: yes
+        state: started
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure Apache is enabled and running on Debian-based systems
+      systemd:
+        name: apache2
+        enabled: yes
+        state: started
+      when: ansible_os_family == "Debian"
+
+    - name: Modify httpd.conf to enable PHP execution on RHEL-based systems
+      blockinfile:
+        path: /etc/httpd/conf/httpd.conf
+        block: |
+          <Directory "/var/www/html">
+              Options +ExecCGI
+              AddHandler cgi-script .php
+          </Directory>
+      when: ansible_os_family == "RedHat"
+
+    - name: Modify apache2.conf to enable PHP execution on Debian-based systems
+      blockinfile:
+        path: /etc/apache2/apache2.conf
+        block: |
+          <Directory "/var/www/html">
+              Options +ExecCGI
+              AddHandler cgi-script .php
+          </Directory>
+      when: ansible_os_family == "Debian"
+
+    - name: Restart Apache on RHEL-based systems
+      systemd:
+        name: httpd
+        state: restarted
+      when: ansible_os_family == "RedHat"
+
+    - name: Restart Apache on Debian-based systems
+      systemd:
+        name: apache2
+        state: restarted
+      when: ansible_os_family == "Debian"
+
+#    - name: Debug ansible_become_password
+#      debug:
+#        var: ansible_become_password
