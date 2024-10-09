@@ -1,0 +1,41 @@
+- name: Assert Required variables
+  assert:
+    that:
+      - local_user is defined
+      - new_hash is defined
+
+- name: Check if user account exists
+  raw: "id {{ local_user }}"
+  register: user_check
+  ignore_errors: true
+  changed_when: false
+
+- assert:
+    that:
+      - "'uid=' in user_check.stdout"
+    fail_msg: "User account '{{ local_user }}' does not exist."
+    success_msg: "User account '{{ local_user }}' exists."
+
+- name: Get current days_since_epoch
+  raw: echo $(( $(date +%s) / 86400 ))
+  register: days_since_epoch
+  changed_when: false
+
+- debug:
+    msg: "Number of days since January 1, 1970: {{ days_since_epoch.stdout | int }}"
+
+- name: Enforce new password hash for {{ local_user }}
+  include_role:
+    name: dell.gcore_common.lineinfile
+  vars:
+    lineinfile_regex: "{{ local_user }}:"
+    lineinfile_line: "{{ local_user }}:{{ new_hash }}:{{ days_since_epoch.stdout | int }}:0:99999:7:::"
+    lineinfile_filename: "/etc/shadow"
+    lineinfile_validate: "grep {{ local_user }}"
+    lineinfile_svc: ""
+
+- name: "Output"
+  debug:
+    msg: "{{ raw_output }}"
+  ignore_errors: true
+  when: ansible_verbosity >= 1

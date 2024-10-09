@@ -1,0 +1,10 @@
+- hosts: "all"
+  gather_facts: no
+  tasks:
+  - name: check remote open port
+    include_role:
+      name: common
+      tasks_from: check_remote_open_port
+    #vars:
+    #  remote_server: "{{ remote_server }}"
+    #  remote_port: "{{ remote_port }}"

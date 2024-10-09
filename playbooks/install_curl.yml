@@ -1,0 +1,9 @@
+---
+- name: Install curl on target machine
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install curl
+      apt:
+        name: curl
+        state: present
