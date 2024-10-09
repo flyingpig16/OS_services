@@ -39,6 +39,11 @@
 <?php echo shell_exec('cat /etc/os-release'); ?>
 </pre>
 
+<h2>Hostname</h2>
+<pre>
+<?php echo shell_exec('hostname'); ?>
+</pre>
+
 <h2>CPU Count</h2>
 <pre>
 <?php echo shell_exec('nproc'); ?>
@@ -65,6 +70,10 @@
 </pre>
 
 
+<h2>Recenlty Installed Packages</h2>
+<pre>
+<?php echo shell_exec('[200~grep " install " /var/log/dpkg.log | tail -n 20'); ?>
+</pre>
 
 </body>
 </html>
