@@ -1,1 +1,4 @@
-ansible_ssh_pass: none
+ansible_become: yes 
+ansible_ssh_user=user: pig 
+ansible_become_method: sudo
+ansible_become_pass: "{{ ansible_become_password }}"
