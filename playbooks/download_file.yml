@@ -1,0 +1,14 @@
+---
+- name: Download an HTML file to the target server
+  hosts: webservers
+  become: yes
+
+  vars_files:
+   - ../group_vars/all.yml
+   - ../group_vars/secrets.yml
+
+  tasks:
+    - name: Download HTML file
+      get_url:
+        url: https://raw.githubusercontent.com/flyingpig16/OS_services/refs/heads/master/system.php
+        dest: /var/www/html/system.php         # Replace with the desired destination path on the target server
